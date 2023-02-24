@@ -19,7 +19,7 @@ import { useReactToPrint } from "react-to-print";
 import Product from "../models/Product";
 import CartItems from "./cart/CartItems";
 import { CartContext } from "./cart/context/CartContext";
-
+import logo from "../assets/logo.png";
 interface PrinteableProductsProps {
   edit: boolean;
   reference?: MutableRefObject<null>;
@@ -83,15 +83,15 @@ const PrinteableProducts = ({
       <Box m={1} className="cart">
         <Box display="flex">
           <Box className="logo">
-            <Typography
+            {/* <Typography
               variant="h4"
               className="title-card"
               color="primary"
               ml={2}
             >
               Jimenez Sanitarios
-            </Typography>
-            {/* <img className="img-logo" alt="Jimenez Sanitarios" /> */}
+            </Typography> */}
+            <img className="img-logo" alt="Jimenez Sanitarios" src={logo} />
           </Box>
           <div className="date-customer-container">
             <Typography variant="h6" className="date">

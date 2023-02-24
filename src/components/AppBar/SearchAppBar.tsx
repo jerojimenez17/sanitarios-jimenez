@@ -155,7 +155,7 @@ export default function SearchAppBar({
               display: { xs: "none", sm: "block" },
             }}
           >
-            Jimenez Sanitarios
+            Sanitarios Jimenez
           </Typography>
           {/* <Search>
             <SearchIconWrapper>

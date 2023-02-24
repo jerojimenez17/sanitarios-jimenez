@@ -26,13 +26,13 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBe5VB2c-_Xv8tLYVdinsLtiZKIu-8rkzQ",
-  authDomain: "sanitarios-jimenez.firebaseapp.com",
-  projectId: "sanitarios-jimenez",
-  storageBucket: "sanitarios-jimenez.appspot.com",
-  messagingSenderId: "966188444363",
-  appId: "1:966188444363:web:41a06fd0884266189ec94e",
-  measurementId: "G-F2N4GNNEF8",
+  apiKey: "AIzaSyC6hQYnenMCloHJj6wz4GUMiGxYx-WjfOY",
+  authDomain: "sanitarios-jimenez-9bf43.firebaseapp.com",
+  projectId: "sanitarios-jimenez-9bf43",
+  storageBucket: "sanitarios-jimenez-9bf43.appspot.com",
+  messagingSenderId: "614050879591",
+  appId: "1:614050879591:web:35c7defd50b214d1815cc2",
+  measurementId: "G-L675SBM4ZS",
 };
 
 // Initialize Firebase
@@ -68,7 +68,7 @@ export const addProductsToClient = async (
   document: DocumentData,
   newProducts: Product[]
 ) => {
-  const docRef = doc(db, "sales", document.id);
+  const docRef = doc(db, "cuentas", document.id);
 
   console.log(docRef);
   newProducts.forEach((newProduct) => {
@@ -117,7 +117,7 @@ export const fetchProductsFromFB = async (list: string) => {
 //refresh the price to a list of products
 
 export const updateProduct = async (docId: string, newProduct: Product) => {
-  const docRef = doc(db, "sales", docId);
+  const docRef = doc(db, "cuentas", docId);
   console.log((await getDoc(docRef)).data());
   let newProducts = null;
   try {

@@ -36,7 +36,7 @@ function Cart() {
   const [openModal, setOpenModal] = useState(false);
   const [openCustomerModal, setOpenCustomerModal] = useState(false);
 
-  const collectionRef = collection(db, "sale");
+  const collectionRef = collection(db, "cuentas");
   const handleSaveSale = () => {
     console.log(cartState.products.length);
     if (cartState.products.length !== 0) {
