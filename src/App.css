@@ -94,6 +94,10 @@ demo-simple-select-helper{
   .date-customer-container{
     margin: 30px 0 0 0 ;
   }
+  
+  .buttonsCountsFB{
+    display: none;
+  }
   .logo{
     display: flex;
     width: 50%;
