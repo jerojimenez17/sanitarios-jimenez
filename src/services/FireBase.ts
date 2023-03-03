@@ -11,6 +11,10 @@ import {
   runTransaction,
   Transaction,
   getDoc,
+  documentId,
+  onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
 import CartState from "../models/CartState";
 import Product from "../models/Product";
@@ -41,8 +45,22 @@ const analytics = getAnalytics(app);
 
 export const db = getFirestore(app);
 
+export const fetchSnapshot = async () => {
+  const collectionRef = collection(db, "cuentas");
+  const q = query(collectionRef, where("id", "!=", "000"));
+  let counts: CartState[] = [];
+  const aux = onSnapshot(q, (querySnapshot) => {
+    const formated = FirebaseAdapter.fromDocumentDataArray(querySnapshot.docs);
+    formated.forEach((snapshot) => {
+      counts.push(snapshot);
+    });
+  });
+  return counts;
+};
+
 export const fetchSales = async () => {
   const collectionRef = collection(db, "cuentas");
+
   let sales: CartState[] = [];
   const docSnap = await getDocs(collectionRef);
 
@@ -64,18 +82,109 @@ export const fetchSales = async () => {
   }
 };
 
+export const editProductAddUnit = async (productId: string, docId: string) => {
+  const docRef = doc(db, "cuentas", docId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const sfDoc = await transaction.get(docRef);
+      if (!sfDoc.exists()) {
+        throw "Document doesn't exist";
+      }
+      const newProducts = sfDoc.data().products;
+      newProducts.forEach((product: Product) => {
+        console.log(productId);
+        if (product.id === productId) {
+          product.amount++;
+        }
+      });
+      transaction.update(docRef, {
+        products: newProducts,
+      });
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const editProductLessUnit = async (productId: string, docId: string) => {
+  const docRef = doc(db, "cuentas", docId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const sfDoc = await transaction.get(docRef);
+      if (!sfDoc.exists()) {
+        throw "Document doesn't exist";
+      }
+      const newProducts = sfDoc.data().products;
+      newProducts.forEach((product: Product) => {
+        console.log(productId);
+        if (product.id === productId && product.amount > 1) {
+          product.amount--;
+        }
+      });
+      transaction.update(docRef, {
+        products: newProducts,
+      });
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+export const editProductRemove = async (productId: string, docId: string) => {
+  const docRef = doc(db, "cuentas", docId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const sfDoc = await transaction.get(docRef);
+      if (!sfDoc.exists()) {
+        throw "Document doesn't exist";
+      }
+      const newProducts = sfDoc.data().products;
+
+      transaction.update(docRef, {
+        products: newProducts.filter((product: Product) => {
+          return product.id !== productId;
+        }),
+      });
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export const addProductsToClient = async (
   document: DocumentData,
   newProducts: Product[]
 ) => {
+  let produ: Product[] = [];
   const docRef = doc(db, "cuentas", document.id);
-
-  console.log(docRef);
-  newProducts.forEach((newProduct) => {
-    updateDoc(docRef, {
-      products: arrayUnion(newProduct),
+  try {
+    await runTransaction(db, async (transaction) => {
+      const sfDoc = await transaction.get(docRef);
+      if (!sfDoc.exists()) {
+        throw new Error(`Could not find `);
+      }
+      produ = sfDoc.data().products;
     });
-  });
+
+    console.log(docRef);
+    newProducts.forEach((newProduct) => {
+      const find = produ.find(
+        (product) => product.description === newProduct.description
+      );
+      if (find) {
+        const index = produ.indexOf(find);
+        produ[index].amount += newProduct.amount;
+        updateDoc(docRef, {
+          products: produ,
+        });
+      } else {
+        updateDoc(docRef, {
+          products: arrayUnion(newProduct),
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 // save the products in documents
 
@@ -119,7 +228,6 @@ export const fetchProductsFromFB = async (list: string) => {
 export const updateProduct = async (docId: string, newProduct: Product) => {
   const docRef = doc(db, "cuentas", docId);
   console.log((await getDoc(docRef)).data());
-  let newProducts = null;
   try {
     await runTransaction(db, async (transaction) => {
       const sfDoc = await transaction.get(docRef);
@@ -127,7 +235,7 @@ export const updateProduct = async (docId: string, newProduct: Product) => {
         throw "Document doesn't exist";
       }
       const newProducts = sfDoc.data().products;
-      console.log(
+      console.table(
         `NEW-PRODUCT:${newProduct.brand} \nDocData:${sfDoc.data().products}`
       );
       newProducts.forEach((product: Product) => {
