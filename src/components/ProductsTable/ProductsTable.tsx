@@ -33,10 +33,6 @@ const ProductsTable = ({
   const { addItem } = useContext(CartContext);
   const [splittedSearch, setSplittedSearch] = useState<string[]>([]);
 
-  useEffect(() => {
-    setSplittedSearch(searchText.split(" "));
-  }, [searchText]);
-
   return (
     <Paper>
       <Box>
