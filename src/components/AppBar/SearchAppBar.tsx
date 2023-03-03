@@ -77,9 +77,7 @@ export default function SearchAppBar({
   handleTheme,
 }: SearchAppBarProps) {
   const { cartState } = useContext(CartContext);
-  React.useEffect(() => {
-    console.log(page);
-  });
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="inherit">

@@ -21,6 +21,7 @@ const CustomerModal = ({ open, handleClose }: CustomerModalProps) => {
   return (
     <div>
       <Modal
+        sx={{ maxHeight: "100vh" }}
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}

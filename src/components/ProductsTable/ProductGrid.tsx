@@ -41,11 +41,6 @@ const ProductGrid = ({ products, openCart }: propsGrid) => {
   ];
 
   const { addItem } = useContext(CartContext);
-  const [selectionModel, setSelectionModel] = useState<Product[]>([]);
-
-  useEffect(() => {
-    console.log(selectionModel);
-  }, [selectionModel, setSelectionModel]);
 
   return (
     <div style={{ height: "80vh", width: "100%" }}>
