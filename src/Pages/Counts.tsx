@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -22,6 +23,7 @@ const Counts = () => {
   const [sales, setsales] = useState<CartState[] | null>([]);
   const [newProductsState, setNewProductsState] = useState<any[]>([]);
   const [newSalesState, setNewSalesState] = useState<CartState[]>([]);
+  const [loading, setLoading] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState("");
 
   const [docToChange, setDocToChange] = useState("");
@@ -36,24 +38,15 @@ const Counts = () => {
   }, []);
 
   const refreshPrice = (sale: CartState) => {
-    let newSales: CartState[] = [];
-    // sales.forEach(async (sale) => {
-
-    let newSale: CartState = {
-      id: "",
-      products: [],
-      total: 0,
-      totalWithDiscount: 0,
-      client: "",
-      date: new Date(0),
-    };
     let newProducts: Product[] = [];
     sale.products.forEach(async (product) => {
       fetchProductById(product.id, product.cod, product.description)
-        .then((product: Product[]) => {
+        .then(async (product: Product[]) => {
+          setLoading(true);
           console.log(product[0]);
           console.log(sale);
-          updateProduct(sale.id, product[0]);
+          await updateProduct(sale.id, product[0]);
+          setLoading(false);
         })
         .catch((error) => {
           console.error(error);
@@ -85,6 +78,9 @@ const Counts = () => {
       display="flex"
       flexWrap="wrap"
     >
+      {loading && (
+        <CircularProgress sx={{ position: "fixed", top: "50%", left: "50%" }} />
+      )}
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
@@ -125,6 +121,7 @@ const Counts = () => {
                   openDeleteModal={openDeleteModal}
                   setDocToChange={setDocToChange}
                   refreshPrice={refreshPrice}
+                  loading={loading}
                 />
               ))}
           </TableBody>
