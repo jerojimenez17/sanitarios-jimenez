@@ -4,7 +4,7 @@ import Product from "../models/Product";
 const fetchProducts = async (route: string) => {
   try {
     const response = await axios.get(
-      "https://sanitarios-backend-production-9972.up.railway.app/api/productos/" +
+      "https://sanitarios-backend-production-0a79.up.railway.app/api/productos/" +
         route,
       {
         headers: {
@@ -27,7 +27,7 @@ export const fetchProductById = async (
   try {
     const listName = id.split("-")[0];
     const response = await axios.get(
-      `https://sanitarios-backend-production-9972.up.railway.app/api/productos/${listName}/` +
+      `https://sanitarios-backend-production-0a79.up.railway.app/api/productos/${listName}/` +
         cod
           .toString()
           .toLocaleLowerCase()
